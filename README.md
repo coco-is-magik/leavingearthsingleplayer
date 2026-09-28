@@ -36,6 +36,51 @@ after actions; export/import JSON provides portable backups. Save data is
 scoped to this app, with a previous-valid-save fallback. Browser storage can
 be unavailable or cleared; export important campaigns.
 
+## Rendezvous and expansion scenario support
+
+In Campaign archive, choose **New campaign: Stations + Outer Planets** to
+enable both expansion scenarios. Existing saves retain their original rules.
+Expansion campaigns end in 1986; Stations uses $30 annual funding.
+
+- Dock stationary spacecraft at the same off-Earth location; separate selected
+  components even during transit. Both children retain the travel time. Crew
+  must retain seats, and samples retain their source when transferred.
+- The planner compares all available expendable-rocket technology subsets,
+  prioritizing the fewest **new** advancements (including prerequisites and
+  maneuver hazards), then hardware cost. Hardware-first is also selectable.
+  Orbital assembly is evaluated as a separate multi-launch strategy; the result
+  reports its comparison even when a direct launch is better. Assembly uses
+  independently launched modules followed by docking at Earth orbit.
+- Outer-system scenario destinations include Jupiter, Saturn, Uranus, Neptune,
+  the Galilean moons, Titan and Enceladus. Proton and Aerobraking enforce their
+  Soyuz and Reentry prerequisites. Scientists can study samples remotely;
+  combined expansion games require a science module for this.
+- Stations adds habitats/seats, ground habitat construction by mechanics,
+  food (one unit feeds five crew), hydroponics, atmospheric fuel generators,
+  reusable Shuttle/Daedalus rockets with matching tanks, and experiments.
+  Production occurs at the beginning of a new year, after the previous year's
+  upkeep. Constructed ground habitats cannot move.
+
+Rules references used: base PDF pp. 27–30 (rendezvous), Outer Planets pp. 5–6,
+9 and 16 (prerequisites, calendar, aerobraking, scientists), Stations pp. 17–20
+and 25–26 (habitats, reusable propulsion, production and food). BoardGameGeek
+blocked automated access (HTTP 403); no reference photos were imported.
+
+**These are partial expansion implementations, not complete expansion decks.**
+Added component prices/masses/thrust and outer-system routes/objectives are
+explicit provisional scenario data, not verified printed-card transcriptions.
+Experiments can be performed but do not yet have return/scoring objectives.
+Galileo and Explorer are purchasable payloads, but their special survey,
+radiation and discard missions are not implemented. Missing expansion rules
+include features/rovers, medical/repair components and damage, radiation,
+slingshot windows, mental health, occupation and astronaut-death scoring,
+and original mission selection. Joint ventures are not used in solitaire.
+
+The planner searches single-type expendable stages, not mixed-engine or
+reusable propulsion, and does not search lunar-orbit lander rendezvous,
+arbitrary separation schedules or launch windows. Hardware selection within
+each technology subset is heuristic. It does not supply crew food automatically.
+
 ## Important scope limitations
 
 **This is a playable prototype, not a complete or rules-faithful implementation
@@ -58,11 +103,10 @@ Deliberate prototype substitutions:
 - Failed propulsion consumes rockets without movement; failed landing/reentry
   destroys the craft. Individual component damage is not modeled.
 - Planets have fixed known conditions. Surveys, hazards from hidden location
-  cards, astronaut skills, rendezvous, separation away from Earth, ion drives,
-  variable-speed travel, and expansion mechanics are unavailable.
-- The planner minimizes hardware cost among single-type rocket stages, not
-  all mixed-engine possibilities. It excludes research, failures, and upkeep
-  costs and does not infer supply or sample requirements automatically.
+  cards, most astronaut skills, ion drives and variable-speed travel remain
+  unavailable. Expansion and rendezvous coverage is described above.
+- The planner reports research separately from hardware, excludes failures
+  and upkeep costs, and does not infer supply or sample requirements.
 
 These gaps prevent treating the prototype as the complete game requested.
 The interface repeats this limitation rather than silently presenting invented
