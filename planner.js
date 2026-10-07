@@ -1,4 +1,4 @@
-import { ROUTES, PARTS, PREREQUISITES } from './data.js';
+import { ROUTES, PARTS, technologyClosure, enabled } from './data.js';
 import { mass } from './engine.js';
 function stagePlan(parts, routeIds, keys) {
   let payload = [...parts];
@@ -35,6 +35,7 @@ export function plan(parts, routeIds, options={}) {
   if (!Array.isArray(routeIds) || !routeIds.length || routeIds.length>20) throw new Error('Choose 1–20 connected maneuvers.');
   const routes=routeIds.map(id=>ROUTES.find(r=>r.id===Number(id)));
   routes.forEach((r,i)=>{if(!r || (i && routes[i-1].to!==r.from))throw new Error('Choose connected maneuvers.');});
+  if(routes.some(r=>!enabled(options,r))||parts.some(p=>!enabled(options,PARTS[p])))throw new Error('Enable the required expansion for this plan.');
   if (parts.includes('groundHabitat')) throw new Error('Constructed ground habitats cannot move.');
   const keys=Object.keys(PARTS).filter(k=>PARTS[k].thrust && !PARTS[k].fuel && (!PARTS[k].expansion || options.expansions?.[PARTS[k].expansion]));
   const known=new Set(options.knownTech||[]), candidates=[];
@@ -43,8 +44,7 @@ export function plan(parts, routeIds, options={}) {
     routes.forEach(r=>{if(r.hazard)tech.add(r.hazard);});
     if (parts.some(p=>PARTS[p].crew) && routes.some(r=>r.years)) tech.add('life');
     if (rendezvous) tech.add('rendezvous');
-    for (const key of tech) if (PREREQUISITES[key]) tech.add(PREREQUISITES[key]);
-    candidate.technologies=[...tech].sort();
+    candidate.technologies=technologyClosure(tech);
     candidate.newTechnologies=candidate.technologies.filter(t=>!known.has(t));
     candidate.researchCost=candidate.newTechnologies.length*10;
     candidate.strategy=rendezvous?'Orbital assembly':'Direct launch';

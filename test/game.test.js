@@ -19,7 +19,7 @@ test('purchase and assembly preserve mass and charge correct budget',()=>{
 });
 test('invalid action leaves original state untouched',()=>{
   const s=launchReady(),before=structuredClone(s);
-  assert.throws(()=>act(s,{type:'maneuver',craft:1,route:0,rockets:[0]}),/40 thrust/);
+  assert.throws(()=>act(s,{type:'maneuver',craft:1,route:999,rockets:[0]}),/No such maneuver/);
   assert.deepEqual(s,before);
   assert.throws(()=>act(s,{type:'buy',key:'saturn'}),/Research/);
   assert.throws(()=>act(s,{type:'assemble',parts:['probe']}),/inventory/);
@@ -34,8 +34,9 @@ test('duplicate rocket indices rejected',()=>{
   assert.throws(()=>act(launchReady(),{type:'maneuver',craft:1,route:0,rockets:[0,0]}),/Invalid rocket/);
 });
 test('randomness is repeatable and state input remains immutable',()=>{
-  const s=newGame(99); s.tech.juno=3;
-  assert.deepEqual(act(s,{type:'test',key:'juno'}),act(s,{type:'test',key:'juno'})); assert.equal(s.money,25);
+  const s=launchReady();s.tech.atlas=['success','minor','major'];
+  const action={type:'maneuver',craft:1,route:0,rockets:[0],outcomeDecisions:[false]};
+  assert.deepEqual(act(s,action),act(s,action)); assert.equal(s.money,8);
 });
 test('funding resets, travel arrives, final year ends campaign',()=>{
   let s=launchReady(); s.crafts[0].location='Earth orbit';s.crafts[0].destination='Mars orbit';s.crafts[0].eta=2;
@@ -77,7 +78,7 @@ test('server serves app assets but not references, traversal or writes',async t=
   const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   const base=`http://127.0.0.1:${server.address().port}`;
-  for(const path of ['/','/app.js','/engine.js','/data.js','/planner.js','/storage.js','/style.css']){const r=await fetch(base+path);assert.equal(r.status,200);assert.ok((await r.text()).length>0);assert.ok(r.headers.get('content-security-policy'));}
+  for(const path of ['/','/app.js','/engine.js','/data.js','/planner.js','/storage.js','/outcomes.js','/mission-plans.js','/style.css']){const r=await fetch(base+path);assert.equal(r.status,200);assert.ok((await r.text()).length>0);assert.ok(r.headers.get('content-security-policy'));}
   for(const path of ['/package.json','/../server.js','/.git/config'])assert.equal((await fetch(base+path)).status,404);
   assert.equal((await fetch(base+'/',{method:'POST'})).status,404);
 });

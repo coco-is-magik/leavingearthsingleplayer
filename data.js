@@ -11,7 +11,14 @@ export const PARTS = {
   sample: { name: 'Surface sample', mass: 1, cost: 0 }
 };
 export const TECH = { juno: 'Juno rockets', atlas: 'Atlas rockets', soyuz: 'Soyuz rockets', saturn: 'Saturn rockets', landing: 'Landing', reentry: 'Reentry', life: 'Life support', rendezvous: 'Rendezvous', proton: 'Proton rockets', aerobraking: 'Aerobraking', surveying: 'Surveying', shuttle: 'Space Shuttle', synthesis: 'Synthesis' };
-export const PREREQUISITES = { proton: 'soyuz', aerobraking: 'reentry' };
+export const PREREQUISITES = { proton: ['soyuz'], aerobraking: ['reentry'], synthesis: ['life'], shuttle: ['reentry','atlas'] };
+export const TECH_EXPANSIONS = {proton:'outer',aerobraking:'outer',synthesis:'stations',shuttle:'stations'};
+export const missingPrerequisites = (tech,key) => (PREREQUISITES[key]||[]).filter(k=>!Object.hasOwn(tech,k));
+export function technologyClosure(keys) {
+  const result=new Set(keys);
+  for (const key of result) for (const prerequisite of PREREQUISITES[key]||[]) result.add(prerequisite);
+  return [...result].sort();
+}
 // Expansion hardware prices, masses and route distances are scenario values,
 // not a transcription of the printed component/location decks.
 Object.assign(PARTS, {
@@ -20,8 +27,8 @@ Object.assign(PARTS, {
   explorer: { name: 'Explorer payload', mass: 1, cost: 3, expansion: 'outer' },
   scientist: { name: 'Scientist', mass: 1, cost: 5, crew: true, expansion: 'outer' },
   mechanic: { name: 'Mechanic', mass: 1, cost: 5, crew: true, expansion: 'stations' },
-  habitat: { name: 'Space habitat', mass: 8, cost: 10, seats: 5, expansion: 'stations' },
-  habitatParts: { name: 'Ground habitat parts', mass: 4, cost: 6, expansion: 'stations' },
+  habitat: { name: 'Space habitat', mass: 8, cost: 10, seats: 5, tech: 'synthesis', expansion: 'stations' },
+  habitatParts: { name: 'Ground habitat parts', mass: 4, cost: 6, tech: 'synthesis', expansion: 'stations' },
   groundHabitat: { name: 'Ground habitat (immovable)', mass: 4, cost: 0, seats: 5, unbuyable: true, expansion: 'stations' },
   food: { name: 'Food (feeds five)', mass: 1, cost: 1, expansion: 'stations' },
   hydroponics: { name: 'Hydroponics module', mass: 3, cost: 5, tech: 'synthesis', expansion: 'stations' },

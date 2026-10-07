@@ -2,7 +2,7 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
-const files = new Set(['index.html', 'style.css', 'app.js', 'data.js', 'engine.js', 'planner.js', 'storage.js']);
+const files = new Set(['index.html', 'style.css', 'app.js', 'data.js', 'engine.js', 'planner.js', 'storage.js', 'outcomes.js', 'mission-plans.js']);
 const types = { html: 'text/html', css: 'text/css', js: 'text/javascript' };
 export function createServer() {
   return http.createServer(async (req, res) => {

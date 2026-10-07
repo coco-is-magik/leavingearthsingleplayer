@@ -20,15 +20,62 @@ npm test
 
 Start in Research & procurement. Research rocket technology, buy components,
 and assemble selected inventory in Mission control. Select a maneuver and the
-rockets to expend. All selected rockets are consumed, even when a burn fails.
+rockets to fire. Successful expendable rockets are consumed; minor failures
+damage rockets without thrust; major failures destroy the spacecraft.
 The engine handles thrust, outcomes, travel, upkeep and mission scoring.
 
 Try the mission planner first: add Earth orbit, Moon orbit, and Moon, then
 calculate a probe mission. It computes stages backwards to include later
 rockets in earlier payload mass. Procurement may span multiple years. Each
-new year resets funding to $25, rather than adding $25. Ground testing improves
-reliability only when a test fails. A capsule is required when assembling crew;
-crew away from Earth need researched life support and one supply per year.
+new year resets funding to $25, rather than adding $25. Testing requires real
+purchased hardware: underpowered maneuvers are allowed, but remain in place.
+A capsule is required when assembling crew;
+crew away from Earth need researched life support and one supply per five crew per year.
+
+### Technology prerequisites and outcome decisions
+
+Research and procurement display their requirements and disable unavailable
+actions; the engine enforces them independently. Proton requires Soyuz,
+Aerobraking requires Reentry, Synthesis requires Life Support, and Space Shuttle
+requires both Reentry and Atlas. Habitats require Synthesis. Expansion-only
+advancements cannot be researched in a base campaign. The base rockets do not
+have an invented Juno → Atlas → Soyuz → Saturn research ladder.
+
+There is no $2 ground-test action. Research deals three hidden outcome cards,
+or five for Synthesis. Each actual advancement use draws a random card from
+its own stack. A browser dialog lets you return the card, or remove it for $5
+(failure), $10 (success), or free (the last success). These decisions happen
+sequentially for multiple rockets. Removing a failure never cancels its effects.
+Damaged rockets cannot fire until repaired; Earth repairs are free.
+
+References: base rulebook pp. 19–23, Stations p. 4, Outer Planets p. 5.
+The scenario outcome supply has 60 successes, 15 minor and 15 major failures;
+the supplied rulebook lists 90 cards but does not enumerate their split. Saves
+contain the seeded hidden decks, so inspecting exported JSON reveals them.
+Old saves with numerical reliability counters are accepted: proven technologies
+remain proven; uncertain technologies receive new cards deterministically on
+the next successful action. Existing researched technologies are retained even
+if an older version let you acquire them without prerequisites.
+
+### Saved and editable mission plans
+
+Calculate a mission, name it, and choose **Save mission** or **Save as copy**.
+Up to 20 plans are stored with the campaign, included in autosaves, backups and
+JSON exports. Loading restores the saved stages; recalculating creates a new
+draft rather than overwriting your saved mission. New campaigns clear the library.
+
+Edit rocket counts per stage or edit the initial component manifest using
+comma-separated component keys. Stage edits update that launch's manifest;
+earlier stages are checked rather than silently recalculated. For an onward
+orbital-assembly stage, explicitly add its changed hardware to a launch manifest.
+
+**Check mission** recomputes mass, thrust, inventory consumption, route
+connectivity, seats, food, rendezvous locations, prerequisites and arrival year.
+It separates physical feasibility from readiness with current unassembled
+inventory and research. It assumes successful outcomes and reports uncertain
+technologies. It does not simulate procurement delays, random failure, production,
+later sample collection, reusable propulsion or multi-year assembly scheduling.
+Invalid but structurally well-formed plans may be saved for later correction.
 
 The campaign runs from 1956 through 1976. Score more points than remain in the
 mission pool to win. The journal records results. Saves happen automatically
@@ -97,11 +144,11 @@ Deliberate prototype substitutions:
 
 - The mission set and route network are simplified scenario data, not the full
   printed decks. All eight missions are active; there is no difficulty draw.
-- Research uses three failure tokens and three implicit success tokens. Each
-  failure permanently removes a failure token. Ground tests cost $2. This is
-  **not** the original outcome-deck/research-removal system.
-- Failed propulsion consumes rockets without movement; failed landing/reentry
-  destroys the craft. Individual component damage is not modeled.
+- Research now uses outcome decks and paid removal after actual uses. Rocket
+  minor/major failures and damage are implemented. Other advancement failure
+  effects remain simplified: failed landing/reentry destroys the craft,
+  rendezvous does not yet damage a chosen component, and production failures
+  do not yet damage modules. Full rendezvous testing is not implemented.
 - Planets have fixed known conditions. Surveys, hazards from hidden location
   cards, most astronaut skills, ion drives and variable-speed travel remain
   unavailable. Expansion and rendezvous coverage is described above.

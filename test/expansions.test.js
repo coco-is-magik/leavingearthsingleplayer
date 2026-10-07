@@ -25,7 +25,7 @@ test('technology-first planning uses one rocket technology across the mission',(
   assert.equal(known.researchCost,0);
   assert.throws(()=>plan(['missing'],[0]),/payload/);
   assert.throws(()=>plan(['probe'],[999]),/connected/);
-  assert.throws(()=>plan(['groundHabitat'],[0]),/cannot move/);
+  assert.throws(()=>plan(['groundHabitat'],[0],{expansions:{stations:true}}),/cannot move/);
 });
 test('orbital assembly plan is executable and conserves its payload',()=>{
   const result=plan(['probe'],[0,2,4],{rendezvous:true,objective:'hardware',knownTech:Object.keys(TECH)});
@@ -52,8 +52,8 @@ test('docking requires co-location, no transit and researched rendezvous',()=>{
   s.crafts[1].eta=0;s.crafts[1].destination=null;
   delete s.tech.rendezvous;
   assert.throws(()=>act(s,{type:'dock',craft:1,target:2}),/Research/);
-  s.tech.rendezvous=3; const before=structuredClone(s);
-  const failed=act(s,{type:'dock',craft:1,target:2});
+  s.tech.rendezvous=['minor']; const before=structuredClone(s);
+  const failed=act(s,{type:'dock',craft:1,target:2,outcomeDecisions:[false]});
   assert.equal(failed.crafts.length,2);assert.deepEqual(s,before);
   s.tech.rendezvous=0;
   const joined=act(s,{type:'dock',craft:1,target:2});
